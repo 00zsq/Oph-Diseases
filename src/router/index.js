@@ -1,34 +1,36 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// 登录
-import LoginPage from '@/views/login/loginPage.vue'
-// 游客
-import VisitorPage from '@/views/visitor/visitorPage.vue'
+// 使用懒加载动态导入组件
+const LoginPage = () => import('@/views/login/loginPage.vue')
+const VisitorPage = () => import('@/views/visitor/visitorPage.vue')
+
 // 管理员
-import UserManagement from '@/views/admin/UserManagement.vue'
-import FeedbackManagement from '@/views/admin/FeedbackManagement.vue'
-import AdminHome from '@/views/admin/AdminHome.vue'
+const AdminHome = () => import('@/views/admin/AdminHome.vue')
+const UserManagement = () => import('@/views/admin/UserManagement.vue')
+const FeedbackManagement = () => import('@/views/admin/FeedbackManagement.vue')
+
 // 用户
-import HeadPage from '../views/user/headPage.vue'
-import UserInfo from '@/views/user/UserInfo.vue'
-import AiAssistant from '@/views/user/AiAssistant.vue'
-import UserDiagnosis from '@/views/user/userDiagnosis.vue'
-import DiagnosisReport from '@/views/user/DiagnosisReport.vue'
-import HomePage from '@/views/user/HomePage.vue'
-import DiseaseDiagnosis from '../views/user/DiseaseDiagnosis.vue'
-import PatientInfo from '@/views/user/PatientInfo.vue'
-import PatientList from '@/views/user/PatientList.vue'
-import PatientRecords from '@/views/user/PatientRecords.vue'
-import DiagnosisInfo from '@/views/user/DiagnosisInfo.vue'
-import DiagnosisList from '@/views/user/DiagnosisList.vue'
-import DiagnosisPatient from '@/views/user/DiagnosisPatient.vue'
-import DiagnosisConfidence from '@/views/user/DiagnosisConfidence.vue'
-import AppointmentManagement from '@/views/user/AppointmentManagement.vue'
+const HeadPage = () => import('@/views/user/headPage.vue')
+const HomePage = () => import('@/views/user/HomePage.vue')
+const UserInfo = () => import('@/views/user/UserInfo.vue')
+const AiAssistant = () => import('@/views/user/AiAssistant.vue')
+const DiseaseDiagnosis = () => import('@/views/user/DiseaseDiagnosis.vue')
+const UserDiagnosis = () => import('@/views/user/userDiagnosis.vue')
+const DiagnosisReport = () => import('@/views/user/DiagnosisReport.vue')
+const PatientInfo = () => import('@/views/user/PatientInfo.vue')
+const PatientList = () => import('@/views/user/PatientList.vue')
+const PatientRecords = () => import('@/views/user/PatientRecords.vue')
+const AppointmentManagement = () => import('@/views/user/AppointmentManagement.vue')
+const DiagnosisInfo = () => import('@/views/user/DiagnosisInfo.vue')
+const DiagnosisList = () => import('@/views/user/DiagnosisList.vue')
+const DiagnosisPatient = () => import('@/views/user/DiagnosisPatient.vue')
+const DiagnosisConfidence = () => import('@/views/user/DiagnosisConfidence.vue')
+
 // 患者
-import PatientHome from '@/views/patient/PatientHome.vue'
-import patientOwnInfo from '@/views/patient/PatientInfo.vue'
-import PatientAppointment from '@/views/patient/PatientAppointment.vue'
-import PatientOperate from '@/views/patient/PatientOperate.vue'
-import PatientReport from '@/views/patient/PatientReport.vue'
+const PatientHome = () => import('@/views/patient/PatientHome.vue')
+const patientOwnInfo = () => import('@/views/patient/PatientInfo.vue')
+const PatientOperate = () => import('@/views/patient/PatientOperate.vue')
+const PatientAppointment = () => import('@/views/patient/PatientAppointment.vue')
+const PatientReport = () => import('@/views/patient/PatientReport.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -164,5 +166,20 @@ const router = createRouter({
     }
   ]
 })
+
+if ('requestIdleCallback' in window) {
+  requestIdleCallback(() => {
+    setTimeout(() => {
+      HeadPage()
+      AdminHome()
+    }, 2000)
+  })
+} else {
+  // 如果浏览器不支持 requestIdleCallback，则使用 setTimeout 作为降级方案
+  setTimeout(() => {
+    HeadPage()
+    AdminHome()
+  }, 3000)
+}
 
 export default router
