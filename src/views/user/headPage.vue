@@ -66,18 +66,21 @@ const handleLogout = async () => {
     router.push('/login')
   }
 }
+
+import logoPath from '@/assets/logo.jpg'
+import userAver from '@/assets/OIP-C.jpg'
 </script>
 
 <template>
   <div class="head-page">
     <el-header>
       <el-col :span="12" class="left">
-        <img src="@/assets/logo.jpg" alt="Logo" class="logo" />
+        <img v-lazy="logoPath" alt="Logo" class="logo" />
         <span class="system-name">智慧眼科医疗平台</span>
       </el-col>
 
       <el-col :span="12" class="right">
-        <img src="@/assets/OIP-C.jpg" class="logo" />
+        <img v-lazy="userAver" class="logo" />
         <span>{{ username }}</span>
         <el-button type="primary" @click="handleLogout">退出登录</el-button>
       </el-col>
