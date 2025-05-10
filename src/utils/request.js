@@ -32,8 +32,7 @@ instance.interceptors.response.use(
 // 生成请求key
 const generateRequestKey = (config) => {
   const { method, url, params, data } = config
-  const timestamp = Date.now()
-  return `${method}:${url}:${JSON.stringify(params)}:${JSON.stringify(data)}:${timestamp}`
+  return `${method}:${url}:${JSON.stringify(params)}:${JSON.stringify(data)}`
 }
 
 // 添加请求到pending
@@ -41,7 +40,7 @@ const addPendingRequest = (config) => {
   const requestKey = generateRequestKey(config)
   if (pendingRequests[requestKey]) {
     config.cancelToken = new axios.CancelToken((cancel) => {
-      cancel('取消重复请求')
+      cancel('请勿重复请求')
     })
   } else {
     pendingRequests[requestKey] = true
