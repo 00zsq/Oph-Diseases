@@ -32,20 +32,23 @@ const PatientOperate = () => import('@/views/patient/PatientOperate.vue')
 const PatientAppointment = () => import('@/views/patient/PatientAppointment.vue')
 const PatientReport = () => import('@/views/patient/PatientReport.vue')
 
+// 路由性能监控
+let routeMetrics = []
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      redirect: '/login'
+      redirect: '/login',
     },
     {
       path: '/login',
-      component: LoginPage
+      component: LoginPage,
     },
     {
       path: '/visitor',
-      component: VisitorPage
+      component: VisitorPage,
     },
     {
       path: '/user',
@@ -53,15 +56,15 @@ const router = createRouter({
       children: [
         {
           path: 'Home',
-          component: HomePage
+          component: HomePage,
         },
         {
           path: 'info',
-          component: UserInfo
+          component: UserInfo,
         },
         {
           path: 'ai-assistant',
-          component: AiAssistant
+          component: AiAssistant,
         },
         {
           path: 'diseaseDiagnosis',
@@ -70,14 +73,14 @@ const router = createRouter({
             {
               path: 'userDiagnosis',
               name: 'userDiagnosis',
-              component: UserDiagnosis
+              component: UserDiagnosis,
             },
             {
               path: 'diagnosisReport',
               name: 'diagnosisReport',
-              component: DiagnosisReport
-            }
-          ]
+              component: DiagnosisReport,
+            },
+          ],
         },
         {
           path: 'patientInfo',
@@ -86,19 +89,19 @@ const router = createRouter({
             {
               path: 'patientList',
               name: 'patientList',
-              component: PatientList
+              component: PatientList,
             },
             {
               path: 'patientRecords',
               name: 'patientRecords',
-              component: PatientRecords
+              component: PatientRecords,
             },
             {
               path: 'appointmentManagement',
               name: 'appointmentManagement',
-              component: AppointmentManagement
-            }
-          ]
+              component: AppointmentManagement,
+            },
+          ],
         },
         {
           path: 'diagnosisInfo',
@@ -107,21 +110,21 @@ const router = createRouter({
             {
               path: 'diagnosisList',
               name: 'diagnosisList',
-              component: DiagnosisList
+              component: DiagnosisList,
             },
             {
               path: 'diagnosisPatient',
               name: 'diagnosisPatient',
-              component: DiagnosisPatient
+              component: DiagnosisPatient,
             },
             {
               path: 'diagnosisConfidence',
               name: 'diagnosisConfidence',
-              component: DiagnosisConfidence
-            }
-          ]
-        }
-      ]
+              component: DiagnosisConfidence,
+            },
+          ],
+        },
+      ],
     },
     {
       path: '/admin',
@@ -129,13 +132,13 @@ const router = createRouter({
       children: [
         {
           path: 'user-management',
-          component: UserManagement
+          component: UserManagement,
         },
         {
           path: 'feedback-management',
-          component: FeedbackManagement
-        }
-      ]
+          component: FeedbackManagement,
+        },
+      ],
     },
     {
       path: '/patient',
@@ -143,7 +146,7 @@ const router = createRouter({
       children: [
         {
           path: 'patientInfo',
-          component: patientOwnInfo
+          component: patientOwnInfo,
         },
         {
           path: 'patientOperate',
@@ -153,27 +156,30 @@ const router = createRouter({
             {
               path: 'patientAppointment',
               name: 'patientAppointment',
-              component: PatientAppointment
+              component: PatientAppointment,
             },
             {
               path: 'patientReport',
               name: 'patientReport',
-              component: PatientReport
-            }
-          ]
-        }
-      ]
-    }
-  ]
+              component: PatientReport,
+            },
+          ],
+        },
+      ],
+    },
+  ],
 })
 
 if ('requestIdleCallback' in window) {
-  requestIdleCallback(() => {
-    setTimeout(() => {
+  requestIdleCallback(
+    () => {
       HeadPage()
       AdminHome()
-    }, 2000)
-  })
+    },
+    {
+      timeout: 2000,
+    },
+  )
 } else {
   // 如果浏览器不支持 requestIdleCallback，则使用 setTimeout 作为降级方案
   setTimeout(() => {
@@ -181,5 +187,26 @@ if ('requestIdleCallback' in window) {
     AdminHome()
   }, 3000)
 }
+
+// 添加路由性能监控
+router.beforeEach((to, from, next) => {
+  window._routeStartTime = performance.now()
+  next()
+})
+
+router.afterEach(() => {
+  const routeTime = performance.now() - window._routeStartTime
+  routeMetrics.push(routeTime)
+
+  // 只保留最近10次切换的数据
+  if (routeMetrics.length > 10) {
+    routeMetrics.shift()
+  }
+
+  // 计算平均值
+  const avgTime = routeMetrics.reduce((a, b) => a + b, 0) / routeMetrics.length
+
+  console.log(`路由切换时间: ${Math.round(routeTime)}ms (平均: ${Math.round(avgTime)}ms)`)
+})
 
 export default router
