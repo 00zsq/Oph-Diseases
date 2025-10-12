@@ -13,9 +13,9 @@ const messages = ref([
 ])
 const newMessage = ref('')
 
-// 简易节流函数
+// 简易防抖函数
 let timeout = null
-const throttle = (func, delay) => {
+const debounce = (func, delay) => {
   return (...args) => {
     if (timeout) {
       clearTimeout(timeout)
@@ -44,10 +44,10 @@ const sendMessage = async (message) => {
   }
 }
 
-const throttledSendMessage = throttle(sendMessage, 300)
+const debouncedSendMessage = debounce(sendMessage, 300)
 
 const handleSendMessage = () => {
-  throttledSendMessage(newMessage.value)
+  debouncedSendMessage(newMessage.value)
 }
 
 const isSendButtonActive = computed(() => newMessage.value.trim() !== '')
