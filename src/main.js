@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import ElementPlus from 'element-plus'
 import { createPinia } from 'pinia'
-import lazyLoad from './components/lazyLoad'
+import lazyLoad from './utils/lazyLoad'
 // 解决组件样式问题
 import 'element-plus/es/components/message/style/css'
 import { initPerformanceMonitor } from './utils/performance'
