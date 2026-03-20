@@ -4,7 +4,7 @@ const pendingRequests = new Map()
 
 const instance = axios.create({
   baseURL: '',
-  timeout: 1000000,
+  timeout: 3000,
   headers: {},
 })
 
@@ -32,7 +32,17 @@ instance.interceptors.response.use(
 // 生成请求key
 const generateRequestKey = (config) => {
   const { method, url, params, data } = config
-  return `${method}:${url}:${JSON.stringify(params)}:${JSON.stringify(data)}`
+  let dataStr = data
+  if (typeof data === 'string') {
+    try {
+      dataStr = JSON.stringify(JSON.parse(data))
+    } catch {
+      console.warn('请求数据不是有效的JSON字符串')
+    }
+  } else {
+    dataStr = JSON.stringify(data)
+  }
+  return `${method}:${url}:${JSON.stringify(params)}:${dataStr}`
 }
 
 // 添加请求到pending

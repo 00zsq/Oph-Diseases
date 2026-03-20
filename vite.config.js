@@ -29,7 +29,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/dsod': {
-        target: 'http://47.109.203.113:8080', // 替换为实际的后端服务地址
+        target: 'http://quick9.shenzhuo.vip:57853', // 替换为实际的后端服务地址
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/dsod/, '/dsod'),
       },
